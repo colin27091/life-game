@@ -13,8 +13,8 @@ Clone the repository and navigate to the project directory.
 To start the development server, run the following command:
 
 ```bash
-bun install
-bun start
+yarn install
+yarn start
 ```
 
 Open your browser and visit [http://localhost:3000](http://localhost:3000) to view the Conway's Game of Life simulation.
