@@ -1,5 +1,7 @@
+import clsx from "clsx"
 import _ from "lodash"
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { Pause, Play } from "./components/Icons"
 
 const App = () => {
 
@@ -36,7 +38,7 @@ const App = () => {
     };
   }, [handleKeyPress]);
 
-  const getNeighbors = (matrix: number[][], rowIndex: number, colIndex: number) => {
+  const getNeighbors = useCallback((rowIndex: number, colIndex: number) => {
     let neighbors = 0
     for (let row = rowIndex - 1; row <= rowIndex + 1; row++) {
       for (let col = colIndex - 1; col <= colIndex + 1; col++) {
@@ -48,36 +50,41 @@ const App = () => {
       }
     }
     return neighbors
-  }
+  }, [matrix])
 
-  const updateMatrix = (matrix: number[][]) => {
-    const newMatrix = _.cloneDeep(matrix)
-    for (let rowIndex = 0; rowIndex < matrix.length; rowIndex++) {
-      for (let colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
-        const cell = matrix[rowIndex][colIndex]
-        const neighbors = getNeighbors(matrix, rowIndex, colIndex)
-        if (cell === 0 && neighbors === 3) {
-          newMatrix[rowIndex][colIndex] = 1
-        } else if (cell === 1 && (neighbors < 2 || neighbors > 3)) {
-          newMatrix[rowIndex][colIndex] = 0
+  const updateMatrix = useCallback(() => {
+    console.timeEnd('updateMatrix')
+    console.time('updateMatrix')
+    setMatrix(matrix => {
+      const newMatrix = _.cloneDeep(matrix)
+      for (let rowIndex = 0; rowIndex < matrix.length; rowIndex++) {
+        for (let colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
+          const cell = matrix[rowIndex][colIndex]
+          const neighbors = getNeighbors(rowIndex, colIndex)
+          if (cell === 0 && neighbors === 3) {
+            newMatrix[rowIndex][colIndex] = 1
+          } else if (cell === 1 && (neighbors < 2 || neighbors > 3)) {
+            newMatrix[rowIndex][colIndex] = 0
+          }
         }
       }
-    }
-    setMatrix(newMatrix)
-  }
+      return newMatrix
+    })
+  }, [getNeighbors])
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     if (running) {
-      intervalId = setInterval(() => updateMatrix(matrix), 300);
+      intervalId = setInterval(updateMatrix, 100);
     }
     return () => {
       clearInterval(intervalId)
     }
-  }, [running, matrix])
+  }, [running, matrix, updateMatrix])
 
   return (
-    <div className={`w-max`}>
+    <div
+      className={clsx('relative w-max', !running && 'cursor-pointer')}>
       <div style={{
         gridTemplateColumns: `repeat(${x}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${y}, minmax(0, 1fr))`
@@ -86,11 +93,18 @@ const App = () => {
           return row.map((value, colIndex) => {
             return <div
               onClick={() => { handleClick(rowIndex, colIndex) }}
-              className={`w-[10px] h-[10px] border-[.1px] ${value ? 'bg-black border-black' : 'border-gray-300'}`}
+              className={
+                clsx('w-[10px] h-[10px] border-[.1px]'
+                  , value ? 'bg-black border-black' : 'border-gray-300')}
               key={`${rowIndex}-${colIndex}`}
             />
           })
         })}
+      </div>
+      <div className="absolute top-0 right-0 m-2">
+        <button onClick={() => { setRunning(!running) }}>
+          {running ? <Pause /> : <Play />}
+        </button>
       </div>
     </div>
   );

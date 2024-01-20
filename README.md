@@ -21,8 +21,8 @@ Open your browser and visit [http://localhost:3000](http://localhost:3000) to vi
 
 ## How to Play
 
-The Game of Life consists of a grid of cells that evolve over time based on a set of rules. You can interact with the simulation by clicking on the cells to toggle them between alive and dead states. Use the controls provided to start, stop, and reset the simulation.
+The Game of Life consists of a grid of cells that evolve over time based on a set of rules. You can interact with the simulation by clicking on the cells to toggle them between alive and dead states. Use spacebar to start, stop the simulation.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
