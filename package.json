@@ -2,7 +2,7 @@
   "name": "life-game",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://colin27091/github.io/life-game",
+  "homepage": "https://colin27091.github.io/life-game",
   "dependencies": {
     "@types/node": "^16.18.71",
     "@types/react": "^18.2.48",
