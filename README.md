@@ -23,6 +23,14 @@ Open your browser and visit [http://localhost:3000](http://localhost:3000) to vi
 
 The Game of Life consists of a grid of cells that evolve over time based on a set of rules. You can interact with the simulation by clicking on the cells to toggle them between alive and dead states. Use spacebar to start, stop the simulation.
 
+## Demonstration
+
+A live demo of the project is available at [https://cregourd.github.io/life-game/](https://cregourd.github.io/life-game/).
+
+## Troubleshooting
+
+On Firefox, the simulation may run slower than on other browsers. This is due to the way Firefox handles the rendering of the grid. For the best experience, use Chrome or Safari. 
+
 ## License
 
 This project is licensed under the MIT License.

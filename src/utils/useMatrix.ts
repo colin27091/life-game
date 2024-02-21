@@ -2,7 +2,9 @@ import { useReducer } from "react";
 
 export enum ACTIONS {
   TOGGLE_CELL = 'TOGGLE_CELL',
-  UPDATE_MATRIX = 'UPDATE_MATRIX'
+  UPDATE_MATRIX = 'UPDATE_MATRIX',
+  RANDOMIZE_MATRIX = 'RANDOMIZE_MATRIX',
+  CLEAR_MATRIX = 'CLEAR_MATRIX'
 }
 
 
@@ -16,6 +18,10 @@ export type Action = {
   payload: Coord
 } | {
   type: 'UPDATE_MATRIX'
+} | {
+  type: 'RANDOMIZE_MATRIX'
+} | {
+  type: 'CLEAR_MATRIX'
 }
 
 const getNeighbors = (matrix: number[][]) => (rowIndex: number, colIndex: number) => {
@@ -38,7 +44,7 @@ const matrixReducer = (state: number[][], action: Action) => {
       return state.map((row, rowIndex) =>
         row.map((cell, cellIndex) =>
           rowIndex === action.payload.x && cellIndex === action.payload.y
-            ? (cell === 0 ? 1 : 0)
+            ? Number(!cell)
             : cell
         )
       );
@@ -55,11 +61,14 @@ const matrixReducer = (state: number[][], action: Action) => {
           }
         })
       );
+    case 'RANDOMIZE_MATRIX':
+      return state.map(row => row.map(() => Math.round(Math.random())))
+    case 'CLEAR_MATRIX':
+      return state.map(row => row.map(() => 0))
     default:
       return state;
   }
 }
 
 const useMatrix = (x: number, y: number) => useReducer(matrixReducer, Array.from({ length: y }, () => Array.from({ length: x }, () => 0)))
-
 export default useMatrix

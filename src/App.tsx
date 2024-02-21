@@ -1,6 +1,7 @@
 import clsx from "clsx"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { Pause, Play } from "./components/Icons"
+import { Clear, Pause, Play, Random } from "./components/Icons"
+import Toolbar, { ToolBarItems } from "./components/Toolbar"
 import useMatrix, { ACTIONS } from "./utils/useMatrix"
 
 const App = () => {
@@ -46,6 +47,32 @@ const App = () => {
     }
   }, [running, dispatch])
 
+  const handleRandomize = useCallback(() => {
+    if (!running) {
+      dispatch({ type: ACTIONS.RANDOMIZE_MATRIX })
+    }
+  }, [running, dispatch])
+
+  const handleClear = useCallback(() => {
+    if (!running) {
+      dispatch({ type: ACTIONS.CLEAR_MATRIX })
+    }
+  }, [running, dispatch])
+
+  const toolbar: ToolBarItems = [{
+    icon: running ? <Pause /> : <Play />,
+    onClick: () => setRunning(!running),
+    title: running ? 'Pause' : 'Play'
+  }, {
+    icon: <Random />,
+    onClick: handleRandomize,
+    title: 'Randomize'
+  }, {
+    icon: <Clear />,
+    onClick: handleClear,
+    title: 'Clear'
+  }]
+
   return (
     <div
       className={clsx('relative w-max', !running && 'cursor-pointer')}>
@@ -60,15 +87,12 @@ const App = () => {
               className={
                 clsx('w-[10px] h-[10px] border-[.1px]'
                   , value ? 'bg-black border-black' : 'border-gray-300')}
+              key={`${rowIndex}-${colIndex}`}
             />
           ))
         })}
       </div>
-      <div className="absolute top-0 right-0 m-2">
-        <button onClick={() => { setRunning(!running) }}>
-          {running ? <Pause /> : <Play />}
-        </button>
-      </div>
+      <Toolbar items={toolbar} />
     </div>
   );
 }
