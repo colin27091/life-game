@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/life-game/static/css/main.926b9197.css",
-    "main.js": "/life-game/static/js/main.4b364ee6.js",
+    "main.css": "/life-game/static/css/main.3566957f.css",
+    "main.js": "/life-game/static/js/main.20b89b5d.js",
     "index.html": "/life-game/index.html",
-    "main.926b9197.css.map": "/life-game/static/css/main.926b9197.css.map",
-    "main.4b364ee6.js.map": "/life-game/static/js/main.4b364ee6.js.map"
+    "main.3566957f.css.map": "/life-game/static/css/main.3566957f.css.map",
+    "main.20b89b5d.js.map": "/life-game/static/js/main.20b89b5d.js.map"
   },
   "entrypoints": [
-    "static/css/main.926b9197.css",
-    "static/js/main.4b364ee6.js"
+    "static/css/main.3566957f.css",
+    "static/js/main.20b89b5d.js"
   ]
 }
