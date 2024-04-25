@@ -39,6 +39,7 @@ const getNeighbors = (matrix: number[][]) => (rowIndex: number, colIndex: number
   return neighbors
 }
 
+
 const matrixReducer = ({ seed: { birth, survive }, shades }: Settings) => (state: number[][], action: MatrixReducerAction) => {
   switch (action.type) {
     case 'TOGGLE_CELL':
@@ -75,9 +76,11 @@ const matrixReducer = ({ seed: { birth, survive }, shades }: Settings) => (state
   }
 }
 
+
 const useMatrix = (x: number, y: number) => {
   const { getValues } = useSettingsContext()
   const settings: Settings = getValues() as Settings
   return useReducer(matrixReducer(settings), Array.from({ length: y }, () => Array.from({ length: x }, () => 0)))
 }
+
 export default useMatrix
