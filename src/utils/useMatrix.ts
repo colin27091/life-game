@@ -14,7 +14,7 @@ export type Coord = {
   y: number
 }
 
-export type Action = {
+export type MatrixReducerAction = {
   type: 'TOGGLE_CELL',
   payload: Coord
 } | {
@@ -39,8 +39,7 @@ const getNeighbors = (matrix: number[][]) => (rowIndex: number, colIndex: number
   return neighbors
 }
 
-const matrixReducer = ({ seed: { birth, survive } }: Settings) => (state: number[][], action: Action) => {
-
+const matrixReducer = ({ seed: { birth, survive }, shades }: Settings) => (state: number[][], action: MatrixReducerAction) => {
   switch (action.type) {
     case 'TOGGLE_CELL':
       return state.map((row, rowIndex) =>
@@ -54,12 +53,16 @@ const matrixReducer = ({ seed: { birth, survive } }: Settings) => (state: number
       return state.map((row, rowIndex) =>
         row.map((cell, cellIndex) => {
           const neighbors = getNeighbors(state)(rowIndex, cellIndex);
-          if (cell === 0 && (neighbors >= birth[0] && neighbors <= birth[1])) {
-            return 1;
-          } else if (cell === 1 && (neighbors < survive[0] || neighbors > survive[1])) {
-            return 0;
+          if(shades) {
+            return parseFloat((neighbors / 8).toFixed(1));
           } else {
-            return cell;
+            if (cell === 0 && (neighbors >= birth[0] && neighbors <= birth[1])) {
+              return 1;
+            } else if (cell === 1 && (neighbors < survive[0] || neighbors > survive[1])) {
+              return 0;
+            } else {
+              return cell;
+            }
           }
         })
       );
@@ -73,7 +76,8 @@ const matrixReducer = ({ seed: { birth, survive } }: Settings) => (state: number
 }
 
 const useMatrix = (x: number, y: number) => {
-  const { settings } = useSettingsContext()
+  const { getValues } = useSettingsContext()
+  const settings: Settings = getValues() as Settings
   return useReducer(matrixReducer(settings), Array.from({ length: y }, () => Array.from({ length: x }, () => 0)))
 }
 export default useMatrix

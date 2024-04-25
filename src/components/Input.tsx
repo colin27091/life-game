@@ -1,7 +1,8 @@
 import clsx from "clsx";
+import { forwardRef } from "react";
 
-const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
-  <input {...props} className={clsx("rounded-md border-gray-600 p-1", props.className)} />
-)
+const Input = forwardRef<HTMLInputElement>((props: React.InputHTMLAttributes<HTMLInputElement>, ref ) => (
+  <input {...props} ref={ref} className={clsx("rounded-md border-gray-600 p-1", props.className)} />
+))
 
 export default Input

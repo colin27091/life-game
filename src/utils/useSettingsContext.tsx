@@ -1,36 +1,29 @@
-import { PropsWithChildren, createContext, useContext, useState } from "react";
+import { PropsWithChildren } from "react";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 export type Settings = {
   seed: {
     birth: [number, number],
     survive: [number, number]
-  }
+  },
+  shades: boolean
 }
-
-export type SettingsContextProps = {
-  settings: Settings,
-  setSettings: React.Dispatch<React.SetStateAction<Settings>>
-}
-
-// @ts-expect-error
-const SettingsContext = createContext<SettingsContextProps>(null)
 
 export const SettingsProvider = ({ children }: PropsWithChildren) => {
-  const [settings, setSettings] = useState<Settings>({
-    seed: {
-      birth: [3, 3],
-      survive: [2, 3]
+  const methods = useForm<Settings>({
+    defaultValues: {
+      seed: {
+        birth: [3, 3],
+        survive: [2, 3]
+      },
+      shades: true
     }
   })
 
-  return <SettingsContext.Provider
-    value={{
-      settings,
-      setSettings
-    }}
-  >
+
+  return <FormProvider {...methods}>
     {children}
-  </SettingsContext.Provider>
+  </FormProvider>
 }
 
-export const useSettingsContext = () => useContext(SettingsContext)
+export const useSettingsContext = () => useFormContext<Settings>()

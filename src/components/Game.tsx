@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import useMatrix, { ACTIONS } from "../utils/useMatrix"
-import { Clear, Pause, Play, Random, Setting } from "./Icons"
+import { Clear, Pause, Play, Random } from "./Icons"
 import SettingModal from "./SettingModal"
 import Toolbar, { ToolBarItems } from "./Toolbar"
 
@@ -11,11 +11,10 @@ const Game = () => {
   const y = useMemo(() => Math.floor(window.innerHeight / 10), [])
   const [matrix, dispatch] = useMatrix(x, y)
   const [running, setRunning] = useState(false)
-  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [isSettingOpen, setIsSettingOpen] = useState(false)
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
-      event.preventDefault();
       if (event.key === ' ') {
         setRunning(!running);
       }
@@ -50,19 +49,15 @@ const Game = () => {
   }, [running, dispatch])
 
   const handleRandomize = useCallback(() => {
-    if (!running) {
-      dispatch({ type: ACTIONS.RANDOMIZE_MATRIX })
-    }
+    dispatch({ type: ACTIONS.RANDOMIZE_MATRIX })
   }, [running, dispatch])
 
   const handleClear = useCallback(() => {
-    if (!running) {
-      dispatch({ type: ACTIONS.CLEAR_MATRIX })
-    }
+    dispatch({ type: ACTIONS.CLEAR_MATRIX })
   }, [running, dispatch])
 
   const handleSettings = useCallback(() => {
-    setIsOpenModal(true)
+    setIsSettingOpen(true)
     setRunning(false)
   }, [])
 
@@ -78,11 +73,13 @@ const Game = () => {
     icon: <Clear />,
     onClick: handleClear,
     title: 'Clear'
-  }, {
-    icon: <Setting />,
-    onClick: handleSettings,
-    title: 'Settings',
-  }]
+  }
+  // , {
+  //   icon: <Setting />,
+  //   onClick: handleSettings,
+  //   title: 'Settings',
+  // }
+]
 
   return (
     <div
@@ -92,19 +89,25 @@ const Game = () => {
         gridTemplateRows: `repeat(${y}, minmax(0, 1fr))`
       }} className={`grid`}>
         {matrix.map((row, rowIndex) => {
-          return row.map((value, colIndex) => (
+          return row.map((value, colIndex) => { 
+            const shade = (255 - Math.round(value * 255)).toString(16).padStart(2, '0')
+            const color = `#${shade}${shade}${shade}`
+            return (
             <div
               onClick={() => handleClick(rowIndex, colIndex)}
+              style={{
+                backgroundColor: color,
+                borderColor: value ? color : '#d1d5db'
+              }}
               className={
-                clsx('w-[10px] h-[10px] border-[.1px]'
-                  , value ? 'bg-black border-black' : 'border-gray-300')}
+                clsx('w-[10px] h-[10px] border-[.1px] text-[.5rem] text-center')}
               key={`${rowIndex}-${colIndex}`}
             />
-          ))
+          )})
         })}
       </div>
       <Toolbar items={toolbar} />
-      <SettingModal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} />
+      <SettingModal isOpen={isSettingOpen} onClose={() => setIsSettingOpen(false)} />
     </div>
   );
 }
