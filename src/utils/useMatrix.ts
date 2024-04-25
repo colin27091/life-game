@@ -1,4 +1,5 @@
 import { useReducer } from "react";
+import { Settings, useSettingsContext } from "./useSettingsContext";
 
 export enum ACTIONS {
   TOGGLE_CELL = 'TOGGLE_CELL',
@@ -38,11 +39,8 @@ const getNeighbors = (matrix: number[][]) => (rowIndex: number, colIndex: number
   return neighbors
 }
 
-<<<<<<< Updated upstream
-const matrixReducer = (state: number[][], action: Action) => {
-=======
+
 const matrixReducer = ({ seed: { birth, survive }, shades }: Settings) => (state: number[][], action: MatrixReducerAction) => {
->>>>>>> Stashed changes
   switch (action.type) {
     case 'TOGGLE_CELL':
       return state.map((row, rowIndex) =>
@@ -56,15 +54,8 @@ const matrixReducer = ({ seed: { birth, survive }, shades }: Settings) => (state
       return state.map((row, rowIndex) =>
         row.map((cell, cellIndex) => {
           const neighbors = getNeighbors(state)(rowIndex, cellIndex);
-<<<<<<< Updated upstream
-          if (cell === 0 && neighbors === 3) {
-            return 1;
-          } else if (cell === 1 && (neighbors < 2 || neighbors > 3)) {
-            return 0;
-=======
           if(shades) {
             return parseFloat((neighbors / 8).toFixed(1));
->>>>>>> Stashed changes
           } else {
             if (cell === 0 && (neighbors >= birth[0] && neighbors <= birth[1])) {
               return 1;
@@ -85,13 +76,11 @@ const matrixReducer = ({ seed: { birth, survive }, shades }: Settings) => (state
   }
 }
 
-<<<<<<< Updated upstream
-const useMatrix = (x: number, y: number) => useReducer(matrixReducer, Array.from({ length: y }, () => Array.from({ length: x }, () => 0)))
-=======
+
 const useMatrix = (x: number, y: number) => {
   const { getValues } = useSettingsContext()
   const settings: Settings = getValues() as Settings
   return useReducer(matrixReducer(settings), Array.from({ length: y }, () => Array.from({ length: x }, () => 0)))
 }
->>>>>>> Stashed changes
+
 export default useMatrix
